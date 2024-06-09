@@ -1,0 +1,32 @@
+int num = end-start+1;
+                double[] everyCompanyStandardDeviation = new double[companyName.length];
+                double[] sumArray = new double[companyName.length];
+                double[][] everyPriceArray = new double[companyName.length][num];
+                for(int i=0 ;i<companyName.length ;i++){
+                    String[] everydayArray = arr[i].split(",");
+                    for(int j=0 ; j<num-1 ; j++){
+                        
+                        everyPriceArray[i][j] = Double.parseDouble(everydayArray[(start+j)]);
+                    }
+                }
+                for(int i=start ; i<=end ; i++){
+                    String[] everydayArray = arr[i].split(",");
+                    for(int j=0 ; j<everydayArray.length ; j++){
+                        sumArray[j] = sumArray[j]+Double.parseDouble(everydayArray[j]);
+                    }
+                }
+                double[] everyStandardDeviation = new double[companyName.length];
+                double[] average = new double[companyName.length];
+                for(int i=0 ; i<sumArray.length ;i++){
+                    average[i] = sumArray[i]/num;
+                }
+                for(int i=0 ; i<everyCompanyStandardDeviation.length ;i++){
+                    double[] index = new double[num];
+                    for(int j=0 ; j<everyPriceArray[i].length ;j++){
+                        index[j] = everyPriceArray[i][j];
+                    }
+                    everyCompanyStandardDeviation[i] = Calculate.standardDeviation(index, average[i], num);
+                }
+                for(double db : everyCompanyStandardDeviation){
+                    System.out.println(db);
+                }
