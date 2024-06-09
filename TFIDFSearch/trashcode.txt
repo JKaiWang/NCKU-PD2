@@ -1,0 +1,169 @@
+String fileName = args[0];
+        try {
+            String testCase = args[1];
+            BufferedReader reader = new BufferedReader(new FileReader(testCase));
+            
+            String[] wordArray = reader.readLine().split("\s+");
+            String[] numberArray = reader.readLine().split("\s+");
+            for(int i=0 ; i<wordArray.length ; i++){
+                int num = Integer.valueOf(numberArray[i]);
+                String word = wordArray[i];
+                String processingText= Read.searchForText(fileName, num).toLowerCase().replaceAll("^[a-z]","\s");
+                int totalNumber = processingText.split("\s+").length;
+                System.out.println(totalNumber);
+            }
+    
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+class ProcessText{
+    public static List<String> processText(String fileName ){
+        List<String> output = new ArrayList<>() ;
+        try {
+            BufferedReader bf = new BufferedReader(new FileReader(fileName));
+            StringBuffer sb = new StringBuffer();
+            String line = "";
+            int currentLine =0;
+            int startLine =0;
+            while((line = bf.readLine()) != null){
+                currentLine ++;
+                if(currentLine>= startLine && currentLine <= startLine+4){
+                    sb.append(line);
+                    sb.append(" ");
+                    if(currentLine == startLine+4){
+                        startLine = currentLine+5;
+                        output.add(sb.toString());
+                    }
+                }
+            }
+            for(String str : output){
+                System.out.println(str);
+                System.out.println("*********************");
+            }
+            bf.close();;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
+}
+
+
+// 假設有一個包含多行英文句子的文本文件，且行數是5的倍數
+        String filePath = args[0]; // 替換為實際文件的路徑
+        String txtPath = args[1]; // 替換為讀取 txt 文件的路徑
+
+        // 用於儲存第一行的字串數組
+        String[] wordArray = null;
+        // 用於儲存第二行的整數數組
+        int[] searchArray = null;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(txtPath))) {
+            // 讀取第一行並拆分
+            String firstLine = br.readLine();
+            if (firstLine != null) {
+                wordArray = firstLine.split(" ");
+            }
+
+            // 讀取第二行並拆分
+            String secondLine = br.readLine();
+            if (secondLine != null) {
+                String[] searchStrings = secondLine.split(" "); // 先存成字串陣列
+                searchArray = new int[searchStrings.length];
+                for (int i = 0; i < searchStrings.length; i++) {
+                    searchArray[i] = Integer.parseInt(searchStrings[i]); // 把字串陣列轉整數陣列
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // try (BufferedReader bf = new BufferedReader(new FileReader(filePath))){
+        //     Trie[] trie = new Trie[60000];
+        //     int lineCount =0;
+        //     String currentLine = "";
+        //     while((currentLine = bf.readLine()) != null){
+
+        //     }
+        //     // 分割文本，每5行句子為一組
+        //     // List<String> segmentedTexts = segmentText(inputText, 5);
+
+        //     // 創建一個 ArrayList 來存儲每個文本的 Trie
+        //     List<Trie> trieList = new ArrayList<>();
+
+        //     // 進行文本處理，包括移除非英文字元並進行詞彙分割
+        //     for (int i = 0; i < segmentedTexts.size(); i++) {
+        //         String segmentedText = segmentedTexts.get(i);
+        //         String processedText = processText(segmentedText);
+
+        //         // 創建新的 Trie 並插入處理過的文本
+        //         Trie trie = new Trie();
+        //         String[] words = processedText.split(" ");
+        //         for (String word : words) {
+        //             trie.insert(word);
+        //             int count = trie.getWordCount(word);
+        //             System.out.println("單詞 '" + word + "' 在第 " + (i+1) + " 個文本段落中出現的次數: " + count);
+        //         }
+        //         trieList.add(trie);
+        //     }
+
+        //     // 設置 wordArray 和 searchArray 到第一個 Trie 實例
+        //     if (!trieList.isEmpty()) {
+        //         Trie firstTrie = trieList.get(0);
+        //         firstTrie.setWordArray(wordArray);
+        //         firstTrie.setSearchArray(searchArray);
+
+        //         // 執行搜尋並輸出結果
+        //         List<Integer> results = firstTrie.countWordsInSegments();
+        //         for (int i = 0; i < results.size(); i++) {
+        //             System.out.println("在文本段落 1 中搜尋 '" + wordArray[i] + "' 出現的次數: " + results.get(i));
+        //         }
+        //     }
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
+    }
+
+    // 讀取文件內容
+    public static String readFile(String filePath) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    // 將文本分割為每5行句子一組
+    public static List<String> segmentText(String inputText, int linesPerText) {
+        List<String> segmentedTexts = new ArrayList<>();
+        Pattern pattern = Pattern.compile(".*?\\n");
+        Matcher matcher = pattern.matcher(inputText);
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        while (matcher.find()) {
+            sb.append(matcher.group());
+            count++;
+            if (count % linesPerText == 0) {
+                segmentedTexts.add(sb.toString().trim());
+                sb.setLength(0);
+            }
+        }
+
+        return segmentedTexts;
+    }
+
+    // 處理文本，移除非英文字元並進行詞彙分割
+    public static String processText(String text) {
+        // 移除非英文字元並轉換為小寫
+        String processedText = text.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+        // 以空白進行詞彙分割
+        processedText = processedText.replaceAll("\\s+", " ");
+        return processedText;
+    }
